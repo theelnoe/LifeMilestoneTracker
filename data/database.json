@@ -1,0 +1,132 @@
+{
+    "projects": [
+        {
+            "name": "English",
+            "goal": 1500,
+            "total_hours": 54.32,
+            "today": 54.32,
+            "week": 54.32,
+            "timer_running": false,
+            "timer_start": null,
+            "last_day": "2026-07-22",
+            "last_week": 30,
+            "milestones": [
+                50,
+                100,
+                200,
+                350,
+                500,
+                750,
+                1000,
+                1250,
+                1500
+            ],
+            "history": [
+                {
+                    "date": "2026-07-22 08:07",
+                    "hours": 0.03,
+                    "display": "2 m"
+                },
+                {
+                    "date": "2026-07-22 08:07",
+                    "hours": 1.22,
+                    "display": "1 h 13 m"
+                },
+                {
+                    "date": "2026-07-22 08:11",
+                    "hours": 0.02,
+                    "display": "1 m"
+                },
+                {
+                    "date": "2026-07-22 08:14",
+                    "hours": 0.05,
+                    "display": "3 m"
+                },
+                {
+                    "date": "2026-07-22 08:26",
+                    "hours": 49.0,
+                    "display": "49 h"
+                },
+                {
+                    "date": "2026-07-22 09:53",
+                    "hours": 4.0,
+                    "display": "4 h"
+                }
+            ]
+        },
+        {
+            "name": "Python",
+            "goal": 1000,
+            "total_hours": 2.04,
+            "today": 2.04,
+            "week": 2.04,
+            "timer_running": false,
+            "timer_start": null,
+            "last_day": "2026-07-22",
+            "last_week": 30,
+            "milestones": [
+                50,
+                100,
+                200,
+                350,
+                500,
+                750,
+                1000
+            ],
+            "history": [
+                {
+                    "date": "2026-07-22 08:24",
+                    "hours": 0.02,
+                    "display": "1 m"
+                },
+                {
+                    "date": "2026-07-22 08:25",
+                    "hours": 2.0,
+                    "display": "2 h"
+                },
+                {
+                    "date": "2026-07-22 09:45",
+                    "hours": 0.02,
+                    "display": "1 m"
+                }
+            ]
+        },
+        {
+            "name": "Paper",
+            "goal": 500,
+            "total_hours": 1.61,
+            "today": 1.61,
+            "week": 1.61,
+            "timer_running": false,
+            "timer_start": null,
+            "last_day": "2026-07-22",
+            "last_week": 30,
+            "milestones": [
+                25,
+                50,
+                100,
+                200,
+                300,
+                400,
+                500
+            ],
+            "history": [
+                {
+                    "date": "2026-07-22 08:25",
+                    "hours": 0.5,
+                    "display": "30 m"
+                },
+                {
+                    "date": "2026-07-22 09:44",
+                    "hours": 0.03,
+                    "display": "2 m"
+                },
+                {
+                    "date": "2026-07-22 09:44",
+                    "hours": 1.08,
+                    "display": "1 h 5 m"
+                }
+            ]
+        }
+    ]
+}

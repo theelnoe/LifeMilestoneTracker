@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Life Milestone Tracker</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+    <body>
+        <div class="container">
+
+            <!-- Header -->
+
+            <div class="header">
+
+                <div class="project-selector">
+
+                    <label for="projectSelect">Project:</label>
+
+                    <select
+                        id="projectSelect"
+                        onchange="location='/?project='+this.value">
+
+                        {% for p in data.projects %}
+
+                        <option
+                            value="{{ loop.index0 }}"
+                            {% if loop.index0 == current_project %}selected{% endif %}>
+
+                            {{ p.name }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <h1>🇬🇧 {{ project.name }} Project</h1>
+
+                <div class="summary">
+
+                    <span class="total-hours">
+
+                        {{ total_text }} / {{ project.goal }} h
+
+                    </span>
+
+                    <span class="percent">
+
+                        {{ progress }} %
+
+                    </span>
+
+                </div>
+
+            </div>
+
+            <!-- Progress -->
+
+            <!-- Progress -->
+
+<div class="progress-section">
+
+    <h3 class="progress-title">
+        🎯 Current Milestone
+    </h3>
+
+    <div class="progress-header">
+
+        <span id="milestoneStart">0 h</span>
+
+        <span id="milestoneEnd">50 h</span>
+
+    </div>
+
+    <div class="progress-track">
+
+        <div id="progressFill" class="progress-fill"></div>
+
+    </div>
+
+    <p id="milestoneProgress" class="milestone-text"></p>
+
+</div>
+
+            <hr>
+
+            <!-- Statistics -->
+
+            <div class="stats">
+
+                <div class="stat-card">
+
+                    <h3>🎯 Next Milestone</h3>
+
+                    <p id="nextMilestone"></p>
+
+                </div>
+
+                <div class="stat-card">
+
+                    <h3>🏆 Completed</h3>
+
+                    <p id="lastMilestone"></p>
+
+                </div>
+
+                <div class="stat-card">
+
+                    <h3>Today</h3>
+
+                    <p>{{ today_text }}</p>
+
+                </div>
+
+                <div class="stat-card">
+
+                    <h3>This Week</h3>
+
+                    <p>{{ week_text }}</p>
+
+                </div>
+
+                <div class="stat-card">
+
+                    <h3>Total</h3>
+
+                    <p>{{ total_text }}</p>
+
+                </div>
+
+        </div>
+
+        <hr>
+        
+            <!-- Timer -->
+
+        <div class="timer-section">
+
+            <h2 id="status">
+
+                ⚪ Ready
+
+            </h2>
+
+            <div id="liveTimer" class="live-timer">
+
+                00:00:00
+
+            </div>
+
+        </div>
+
+        <!-- Buttons -->
+
+        <div class="button-row">
+
+            <button id="startBtn"
+                    onclick="startTimer()">
+
+                ▶ Start
+
+            </button>
+
+            <button id="stopBtn"
+                    onclick="stopTimer()"
+                    disabled>
+
+                ■ Stop
+
+            </button>
+
+            <button onclick="showAddTimeDialog()">
+
+                ➕ Add Time
+
+            </button>
+
+        </div>
+
+        <!-- Add Time Dialog -->
+
+        <div id="addTimeModal" class="modal">
+
+            <div class="modal-content">
+
+                <h2>
+
+                    Add Study Time
+
+                </h2>
+
+                <label>
+
+                    Hours
+
+                </label>
+
+                <input
+                    type="number"
+                    id="hoursInput"
+                    min="0"
+                    value="0">
+
+                <label>
+
+                    Minutes
+
+                </label>
+
+                <input
+                    type="number"
+                    id="minutesInput"
+                    min="0"
+                    max="59"
+                    value="0">
+
+                <div class="modal-buttons">
+
+                    <button onclick="saveManualTime()">
+
+                        Save
+
+                    </button>
+
+                    <button onclick="closeDialog()">
+
+                        Cancel
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <hr>
+
+
+        
+            <!-- History -->
+
+        <h2>
+
+            📜 History
+
+        </h2>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Date</th>
+
+                    <th>Hours</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for item in project.history|reverse %}
+
+                <tr>
+
+                    <td>{{ item.date }}</td>
+
+                    <td>
+                        {% if item.display %}
+                            {{ item.display }}
+                        {% else %}
+                            {{ item.hours }} h
+                        {% endif %}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <script id="projectData" type="application/json">
+    {
+        "goal": {{ project.goal }},
+        "milestones": {{ project.milestones|tojson }},
+        "total": {{ project.total_hours }}
+    }
+    </script>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+
+    </body>
+
+</html>
