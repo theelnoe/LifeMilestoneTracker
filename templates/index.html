@@ -44,6 +44,10 @@
 
                 </div>
 
+                <button id="newProjectBtn">
+                    ➕ New Project
+                </button>
+
                 <h1>🇬🇧 {{ project.name }} Project</h1>
 
                 <div class="summary">
@@ -306,6 +310,41 @@
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 
+
+        <div id="newProjectModal" class="modal" style="display:none;">
+
+    <div class="modal-content">
+
+        <h3>New Project</h3>
+
+        <label>Project Name</label>
+
+        <input
+            type="text"
+            id="newProjectName">
+
+        <label>Goal (hours)</label>
+
+        <input
+            type="number"
+            id="newProjectGoal"
+            min="1">
+
+                <div class="modal-buttons">
+
+                    <button id="cancelProjectBtn">
+                        Cancel
+                    </button>
+
+                    <button id="createProjectBtn">
+                        Create
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
 
     </body>
 
