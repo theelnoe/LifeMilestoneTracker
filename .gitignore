@@ -5,7 +5,7 @@ __pycache__/
 # VS Code
 .vscode/
 
-# Environment
+# Virtual environments
 .env
 .venv/
 venv/
@@ -16,4 +16,9 @@ venv/
 # Windows
 Thumbs.db
 
+# User data
 data/database.json
+
+# Future
+instance/
+*.db

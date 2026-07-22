@@ -30,13 +30,13 @@ Coming soon.
 Clone the repository:
 
 ```bash
-git clone https://github.com/USERNAME/LifeMilestoneTracker.git
+git clone https://github.com/theelnoe/LifeMilestoneTracker.git
 ```
 
 Install dependencies:
 
 ```bash
-pip install flask
+pip install -r requirements.txt
 ```
 
 Run:
@@ -54,10 +54,10 @@ http://127.0.0.1:5000
 ## Roadmap
 
 - Export statistics
-- Charts and analytics
-- Multiple themes
+- Interactive charts
 - Cloud synchronization
-- Android version
+- Progressive Web App (PWA)
+- Android support
 
 ## License
 
