@@ -31,7 +31,92 @@ window.onload = function () {
 
 };
 
+   
 updateMilestones();
+
+// ========================================
+// Project
+// ========================================
+
+function getCurrentProject() {
+
+    return currentProject;
+
+}
+
+// ========================================
+// New Project
+// ========================================
+window.onload = function () {
+
+    console.log("window loaded");
+
+    restoreTimer();
+
+    buildMilestoneBar();
+
+    updateMilestones();
+
+    const newProjectBtn =
+        document.getElementById("newProjectBtn");
+
+    const newProjectModal =
+        document.getElementById("newProjectModal");
+
+    const cancelProjectBtn =
+        document.getElementById("cancelProjectBtn");
+
+    const createProjectBtn =
+        document.getElementById("createProjectBtn");
+
+    const newProjectName =
+        document.getElementById("newProjectName");
+
+    const newProjectGoal =
+        document.getElementById("newProjectGoal");
+
+    newProjectBtn.onclick = function () {
+
+        newProjectModal.style.display = "flex";
+
+    };
+
+    cancelProjectBtn.onclick = function () {
+
+        newProjectModal.style.display = "none";
+
+    };
+
+    createProjectBtn.onclick = function () {
+
+        if (newProjectName.value.trim() === "") {
+
+            alert("Project name is required.");
+
+            return;
+
+        }
+
+        if (newProjectGoal.value <= 0) {
+
+            alert("Goal must be greater than zero.");
+
+            return;
+
+        }
+
+        console.log("Project Name:", newProjectName.value);
+
+        console.log("Goal:", newProjectGoal.value);
+
+        newProjectModal.style.display = "none";
+
+        newProjectName.value = "";
+
+        newProjectGoal.value = "";
+
+    };
+};
 
 function updateMilestones() {
 
