@@ -144,7 +144,7 @@ def add_history(project, end, hours):
 
         "date": end.strftime("%Y-%m-%d %H:%M"),
 
-        "hours": round(hours, 2),
+        "hours": round(hours, 6),
 
         "display": format_hours(hours)
 
@@ -205,6 +205,8 @@ def index():
         1
     )
 
+    history_for_ui = list(reversed(project["history"]))
+
     return render_template(
 
         "index.html",
@@ -221,11 +223,11 @@ def index():
 
         today_text=format_hours(project["today"]),
 
-        week_text=format_hours(project["week"])
+        week_text=format_hours(project["week"]),
+
+        history_for_ui=history_for_ui
 
     )
-
-
 
 @app.route("/create_project", methods=["POST"])
 def create_project():
@@ -303,7 +305,6 @@ def delete_project():
 
     return redirect(url_for("index"))
 
-
 # -----------------------------
 # Start Timer
 # -----------------------------
@@ -325,7 +326,6 @@ def start_timer():
         "success": True
     })
 
-
 # -----------------------------
 # Timer Status
 # -----------------------------
@@ -342,7 +342,6 @@ def timer_status():
         "start": project["timer_start"]
 
     })
-
 
 # -----------------------------
 # Stop Timer
@@ -432,10 +431,111 @@ def add_time():
 
         "success": True,
 
-        "total": round(project["total_hours"],2)
+        "total_text": format_hours(project["total_hours"]),
+
+        "today_text": format_hours(project["today"]),
+
+        "week_text": format_hours(project["week"]),
+
+        "total_hours": round(project["total_hours"], 6),
+
+        "goal": project["goal"],
+
+        "progress": round(
+
+            project["total_hours"] /
+            project["goal"] * 100,
+
+            1
+
+        ),
+
+        "milestones": project["milestones"]
 
     })
 
+# -----------------------------
+# Edit Session
+# -----------------------------
+
+@app.route("/edit_session", methods=["POST"])
+def edit_session():
+
+    data, project, _ = get_project()
+
+    body = request.get_json()
+
+    index = body["index"]
+
+    hours = int(body["hours"])
+
+    minutes = int(body["minutes"])
+
+    value = hours + (minutes / 60)
+
+    real_index = len(project["history"]) - 1 - index
+
+    project["history"][real_index]["hours"] = round(value, 2)
+
+    project["history"][real_index]["display"] = format_hours(value)
+
+    rebuild_totals(project)
+
+    save_data(data)
+
+    return jsonify({
+
+        "success": True,
+
+        "goal": project["goal"],
+
+        "milestones": project["milestones"],
+
+        "total_hours": project["total_hours"],
+
+        "total_text": format_hours(project["total_hours"]),
+
+        "today_text": format_hours(project["today"]),
+
+        "week_text": format_hours(project["week"]),
+
+        "display": format_hours(value),
+
+        "progress": round(
+
+            project["total_hours"] /
+            project["goal"] * 100,
+
+            1
+
+        )
+
+    })
+
+# -----------------------------
+# Delete Session
+# -----------------------------
+
+@app.route("/delete_session", methods=["POST"])
+def delete_session():
+
+    data, project, _ = get_project()
+
+    body = request.get_json()
+
+    index = int(body["index"])
+
+    project["history"].pop(index)
+
+    rebuild_totals(project)
+
+    save_data(data)
+
+    return jsonify({
+
+        "success": True
+
+    })
 
 # -----------------------------
 # Main

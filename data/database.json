@@ -3,9 +3,9 @@
         {
             "name": "English",
             "goal": 1500,
-            "total_hours": 55.53,
-            "today": 1.21,
-            "week": 55.53,
+            "total_hours": 63.0,
+            "today": 20.02,
+            "week": 63.0,
             "timer_running": false,
             "timer_start": null,
             "last_day": "2026-07-23",
@@ -25,8 +25,8 @@
             "history": [
                 {
                     "date": "2026-07-22 08:07",
-                    "hours": 0.03,
-                    "display": "2 m"
+                    "hours": 2.2,
+                    "display": "2 h 12 m"
                 },
                 {
                     "date": "2026-07-22 08:07",
@@ -35,28 +35,18 @@
                 },
                 {
                     "date": "2026-07-22 08:11",
-                    "hours": 0.02,
-                    "display": "1 m"
+                    "hours": 7.78,
+                    "display": "7 h 47 m"
                 },
                 {
                     "date": "2026-07-22 08:14",
-                    "hours": 0.05,
-                    "display": "3 m"
-                },
-                {
-                    "date": "2026-07-22 08:26",
-                    "hours": 49.0,
-                    "display": "49 h"
+                    "hours": 27.78,
+                    "display": "27 h 47 m"
                 },
                 {
                     "date": "2026-07-22 09:53",
                     "hours": 4.0,
                     "display": "4 h"
-                },
-                {
-                    "date": "2026-07-23 08:06",
-                    "hours": 0.02,
-                    "display": "1 m"
                 },
                 {
                     "date": "2026-07-23 08:20",
@@ -67,6 +57,41 @@
                     "date": "2026-07-23 08:20",
                     "hours": 1.03,
                     "display": "1 h 2 m"
+                },
+                {
+                    "date": "2026-07-23 10:57",
+                    "hours": 4.0,
+                    "display": "4 h"
+                },
+                {
+                    "date": "2026-07-23 10:58",
+                    "hours": 2.233333,
+                    "display": "2 h 14 m"
+                },
+                {
+                    "date": "2026-07-23 11:01",
+                    "hours": 1.78,
+                    "display": "1 h 47 m"
+                },
+                {
+                    "date": "2026-07-23 11:01",
+                    "hours": 7.53,
+                    "display": "7 h 32 m"
+                },
+                {
+                    "date": "2026-07-23 11:06",
+                    "hours": 1.033333,
+                    "display": "1 h 2 m"
+                },
+                {
+                    "date": "2026-07-23 12:07",
+                    "hours": 2.23,
+                    "display": "2 h 14 m"
+                },
+                {
+                    "date": "2026-07-23 14:12",
+                    "hours": 0.02,
+                    "display": "1 m"
                 }
             ]
         },

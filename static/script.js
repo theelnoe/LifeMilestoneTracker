@@ -5,9 +5,6 @@ console.log(projectData);
 const currentProject =
     new URLSearchParams(window.location.search).get("project") || 0;
 
-const milestones = projectData.milestones;
-const total = projectData.total;
-
 // ========================================
 // Global Variables
 // ========================================
@@ -15,6 +12,8 @@ const total = projectData.total;
 let timerRunning = false;
 let startTime = null;
 let timerInterval = null;
+let editingSessionIndex = null;
+let editingRow = null;
 
 // ========================================
 // Initialize
@@ -95,6 +94,138 @@ window.onload = function () {
     const editProjectGoal =
         document.getElementById("editProjectGoal");    
 
+
+    // -------------------------
+    // Edit Session
+    // -------------------------
+    const editSessionModal =
+        document.getElementById("editSessionModal");
+
+    const saveEditSessionBtn =
+        document.getElementById("saveEditSessionBtn");
+
+    const cancelEditSessionBtn =
+        document.getElementById("cancelEditSessionBtn");
+
+    const editButtons =
+        document.querySelectorAll(".editSessionBtn");
+
+    editButtons.forEach(btn => {
+
+        btn.onclick = function () {
+
+            editingSessionIndex = Number(btn.dataset.index);
+
+            editingRow = btn.closest("tr");
+
+            const session =
+                projectData.history[editingSessionIndex];
+
+            const value = session.hours;
+
+            const h = Math.floor(value);
+
+            const m = Math.round((value - h) * 60);
+
+            document.getElementById("editHours").value = h;
+
+            document.getElementById("editMinutes").value = m;
+
+            editSessionModal.style.display = "flex";
+
+        };
+
+    });
+
+    saveEditSessionBtn.onclick = function () {
+
+        const hours =
+            parseInt(document.getElementById("editHours").value) || 0;
+
+        const minutes =
+            parseInt(document.getElementById("editMinutes").value) || 0;
+
+        fetch("/edit_session?project=" + currentProject, {
+
+            method: "POST",
+
+            headers: {
+
+                "Content-Type": "application/json"
+
+            },
+
+            body: JSON.stringify({
+
+                index: editingSessionIndex,
+
+                hours: hours,
+
+                minutes: minutes
+
+            })
+
+        })
+
+        .then(r => r.json())
+
+        .then(data => {
+
+            refreshDashboard(data);
+
+            editingRow.querySelector(".sessionDisplay").textContent =
+                data.display;
+                
+            editSessionModal.style.display = "none";
+
+        });
+
+    };
+
+    // -------------------------
+    // Delete Session
+    // -------------------------
+    const deleteButtons =
+        document.querySelectorAll(".deleteSessionBtn");
+
+    deleteButtons.forEach(btn => {
+
+        btn.onclick = async function () {
+
+            if (!confirm("Delete this session?"))
+                return;
+
+            const index = this.dataset.index;
+
+            const response = await fetch("/delete_session", {
+
+                method: "POST",
+
+                headers: {
+
+                    "Content-Type": "application/json"
+
+                },
+
+                body: JSON.stringify({
+
+                    index: index
+
+                })
+
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+
+                location.reload();
+
+            }
+
+        };
+
+    });
 
     // =========================
     // Events
@@ -257,9 +388,15 @@ window.onload = function () {
 
     };
 
+    cancelEditSessionBtn.onclick = function () {
+
+        editSessionModal.style.display = "none";
+
+    };
 };
    
 updateMilestones();
+
 
 // ========================================
 // Project
@@ -272,6 +409,9 @@ function getCurrentProject() {
 }
 
 function updateMilestones() {
+
+    const milestones = projectData.milestones;
+    const total = projectData.total;
 
     let next = "Completed";
     let last = "0 h";
@@ -286,6 +426,7 @@ function updateMilestones() {
                 last = milestones[i - 1] + " h";
 
             break;
+
         }
 
     }
@@ -299,8 +440,44 @@ function updateMilestones() {
     }
 
     document.getElementById("nextMilestone").textContent = next;
+
     document.getElementById("lastMilestone").textContent = last;
 
+}
+
+function refreshDashboard(data) {
+
+    // ---------- Update project data ----------
+
+    projectData.total = data.total_hours;
+
+    projectData.goal = data.goal;
+
+    projectData.milestones = data.milestones;
+
+    // ---------- Summary ----------
+
+    document.querySelector(".total-hours").textContent =
+        data.total_text + " / " + data.goal + " h";
+
+    document.querySelector(".percent").textContent =
+        data.progress + " %";
+
+    // ---------- Cards ----------
+
+    document.getElementById("todayHours").textContent =
+        data.today_text;
+
+    document.getElementById("weekHours").textContent =
+        data.week_text;
+
+    document.getElementById("totalHours").textContent =
+        data.total_text;
+
+    // ---------- Milestones ----------
+
+    updateMilestones();
+    buildMilestoneBar();
 }
 
 // ========================================
@@ -504,9 +681,11 @@ function saveManualTime() {
 
     .then(data => {
 
+        console.log(data);
+
         closeDialog();
 
-        location.reload();
+        refreshDashboard(data);
 
     });
 
@@ -517,6 +696,9 @@ function saveManualTime() {
 // ========================================
 
 function buildMilestoneBar() {
+
+    const milestones = projectData.milestones;
+    const total = projectData.total;
 
     let previous = 0;
     let next = milestones[milestones.length - 1];
@@ -531,6 +713,7 @@ function buildMilestoneBar() {
                 previous = milestones[i - 1];
 
             break;
+
         }
 
     }
