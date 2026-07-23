@@ -16,46 +16,28 @@ let timerRunning = false;
 let startTime = null;
 let timerInterval = null;
 
-
 // ========================================
 // Initialize
 // ========================================
 
 window.onload = function () {
+
     console.log("window loaded");
+
+    // -------------------------
+    // General
+    // -------------------------
+
     restoreTimer();
 
     buildMilestoneBar();
 
     updateMilestones();
 
-};
 
-   
-updateMilestones();
-
-// ========================================
-// Project
-// ========================================
-
-function getCurrentProject() {
-
-    return currentProject;
-
-}
-
-// ========================================
-// New Project
-// ========================================
-window.onload = function () {
-
-    console.log("window loaded");
-
-    restoreTimer();
-
-    buildMilestoneBar();
-
-    updateMilestones();
+    // -------------------------
+    // New Project
+    // -------------------------
 
     const newProjectBtn =
         document.getElementById("newProjectBtn");
@@ -74,6 +56,28 @@ window.onload = function () {
 
     const newProjectGoal =
         document.getElementById("newProjectGoal");
+
+
+    // -------------------------
+    // Delete Project
+    // -------------------------
+
+    const deleteProjectBtn =
+        document.getElementById("deleteProjectBtn");
+
+    const deleteProjectModal =
+        document.getElementById("deleteProjectModal");
+
+    const cancelDeleteBtn =
+        document.getElementById("cancelDeleteBtn");
+
+    const confirmDeleteBtn =
+        document.getElementById("confirmDeleteBtn");
+
+
+    // =========================
+    // Events
+    // =========================
 
     newProjectBtn.onclick = function () {
 
@@ -105,18 +109,62 @@ window.onload = function () {
 
         }
 
-        console.log("Project Name:", newProjectName.value);
+        const form = document.createElement("form");
 
-        console.log("Goal:", newProjectGoal.value);
+        form.method = "POST";
 
-        newProjectModal.style.display = "none";
+        form.action = "/create_project";
 
-        newProjectName.value = "";
+        const inputName = document.createElement("input");
+        inputName.type = "hidden";
+        inputName.name = "name";
+        inputName.value = newProjectName.value;
 
-        newProjectGoal.value = "";
+        const inputGoal = document.createElement("input");
+        inputGoal.type = "hidden";
+        inputGoal.name = "goal";
+        inputGoal.value = newProjectGoal.value;
+
+        form.appendChild(inputName);
+        form.appendChild(inputGoal);
+
+        document.body.appendChild(form);
+
+        form.submit();
 
     };
+
+    deleteProjectBtn.onclick = function () {
+
+        deleteProjectModal.style.display = "flex";
+
+    };
+
+    cancelDeleteBtn.onclick = function () {
+
+        deleteProjectModal.style.display = "none";
+
+    };
+
+    confirmDeleteBtn.onclick = function () {
+
+        console.log("Delete confirmed");
+
+    };
+
 };
+   
+updateMilestones();
+
+// ========================================
+// Project
+// ========================================
+
+function getCurrentProject() {
+
+    return currentProject;
+
+}
 
 function updateMilestones() {
 

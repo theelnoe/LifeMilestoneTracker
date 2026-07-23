@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 import json
 import os
 from datetime import datetime
@@ -7,6 +7,21 @@ app = Flask(__name__)
 
 DATABASE = "data/database.json"
 
+DEFAULT_MILESTONES = [
+    25,
+    50,
+    100,
+    200,
+    350,
+    500,
+    750,
+    1000,
+    1250,
+    1500,
+    2000,
+    3000,
+    5000
+]
 
 # -----------------------------
 # Database
@@ -65,6 +80,19 @@ def save_data(data):
     with open(DATABASE,"w") as f:
 
         json.dump(data,f,indent=4,ensure_ascii=False)
+
+def generate_milestones(goal):
+
+    milestones = []
+
+    for m in DEFAULT_MILESTONES:
+
+        if m < goal:
+            milestones.append(m)
+
+    milestones.append(goal)
+
+    return milestones
 
 def rebuild_totals(project):
 
@@ -225,6 +253,35 @@ def index():
 
     )
 
+
+
+@app.route("/create_project", methods=["POST"])
+def create_project():
+
+    name = request.form["name"].strip()
+    goal = int(request.form["goal"])
+
+    data = load_data()
+
+    new_project = {
+        "name": name,
+        "goal": goal,
+        "total_hours": 0,
+        "today": 0,
+        "week": 0,
+        "timer_running": False,
+        "timer_start": None,
+        "last_day": "",
+        "last_week": 0,
+        "milestones": generate_milestones(goal),
+        "history": []
+    }
+
+    data["projects"].append(new_project)
+
+    save_data(data)
+
+    return redirect(url_for("index"))
 # -----------------------------
 # Start Timer
 # -----------------------------
