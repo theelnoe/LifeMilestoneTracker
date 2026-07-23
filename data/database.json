@@ -1,11 +1,11 @@
 {
     "projects": [
         {
-            "name": "English 2026",
-            "goal": 3000,
-            "total_hours": 54.32,
-            "today": 0,
-            "week": 54.32,
+            "name": "English",
+            "goal": 1500,
+            "total_hours": 55.53,
+            "today": 1.21,
+            "week": 55.53,
             "timer_running": false,
             "timer_start": null,
             "last_day": "2026-07-23",
@@ -20,9 +20,7 @@
                 750,
                 1000,
                 1250,
-                1500,
-                2000,
-                3000
+                1500
             ],
             "history": [
                 {
@@ -54,6 +52,21 @@
                     "date": "2026-07-22 09:53",
                     "hours": 4.0,
                     "display": "4 h"
+                },
+                {
+                    "date": "2026-07-23 08:06",
+                    "hours": 0.02,
+                    "display": "1 m"
+                },
+                {
+                    "date": "2026-07-23 08:20",
+                    "hours": 0.16,
+                    "display": "10 m"
+                },
+                {
+                    "date": "2026-07-23 08:20",
+                    "hours": 1.03,
+                    "display": "1 h 2 m"
                 }
             ]
         },
@@ -95,41 +108,26 @@
             ]
         },
         {
-            "name": "Paper",
-            "goal": 500,
-            "total_hours": 1.61,
-            "today": 1.61,
-            "week": 1.61,
+            "name": "test1",
+            "goal": 1000,
+            "total_hours": 0,
+            "today": 0,
+            "week": 0,
             "timer_running": false,
             "timer_start": null,
-            "last_day": "2026-07-22",
-            "last_week": 30,
+            "last_day": "",
+            "last_week": 0,
             "milestones": [
                 25,
                 50,
                 100,
                 200,
-                300,
-                400,
-                500
+                350,
+                500,
+                750,
+                1000
             ],
-            "history": [
-                {
-                    "date": "2026-07-22 08:25",
-                    "hours": 0.5,
-                    "display": "30 m"
-                },
-                {
-                    "date": "2026-07-22 09:44",
-                    "hours": 0.03,
-                    "display": "2 m"
-                },
-                {
-                    "date": "2026-07-22 09:44",
-                    "hours": 1.08,
-                    "display": "1 h 5 m"
-                }
-            ]
+            "history": []
         }
     ]
 }

@@ -132,11 +132,9 @@ def prepare_project():
 
     data, project, current_project = get_project()
 
-    reset_counters(project)
-
     rebuild_totals(project)
 
-    save_data(data)
+    #save_data(data)
 
     return data, project, current_project
 
@@ -152,21 +150,11 @@ def add_history(project, end, hours):
 
     })
 
-def update_project_hours(project, hours):
-
-    project["total_hours"] += hours
-
-    project["today"] += hours
-
-    project["week"] += hours
-
 def register_session(project, end, hours):
 
-    reset_counters(project)
-
-    update_project_hours(project, hours)
-
     add_history(project, end, hours)
+
+    rebuild_totals(project)
 
 def calculate_elapsed_hours(start_time, end_time):
 
@@ -186,22 +174,6 @@ def get_project():
     project = data["projects"][index]
 
     return data, project, index
-
-def reset_counters(project):
-
-    today = datetime.now().strftime("%Y-%m-%d")
-
-    week = datetime.now().isocalendar().week
-
-    if project.get("last_day") != today:
-
-        project["today"] = 0
-        project["last_day"] = today
-
-    if project.get("last_week") != week:
-
-        project["week"] = 0
-        project["last_week"] = week
 
 def format_hours(value):
 
