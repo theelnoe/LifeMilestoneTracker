@@ -52,6 +52,12 @@
                     🗑 Delete Project
                 </button>
 
+                <button id="editProjectBtn">
+
+                    ✏️ Edit Project
+
+                </button>
+
                 <h1>🇬🇧 {{ project.name }} Project</h1>
 
                 <div class="summary">
@@ -306,9 +312,10 @@
 
     <script id="projectData" type="application/json">
     {
-        "goal": {{ project.goal }},
-        "milestones": {{ project.milestones|tojson }},
-        "total": {{ project.total_hours }}
+        "name": {{ project["name"]|tojson }},
+        "goal": {{ project["goal"] }},
+        "milestones": {{ project["milestones"]|tojson }},
+        "total": {{ project["total_hours"] }}
     }
     </script>
 
@@ -370,6 +377,45 @@
                     <button id="confirmDeleteBtn">
 
                         Delete
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="editProjectModal" class="modal" style="display:none;">
+
+            <div class="modal-content">
+
+                <h3>Edit Project</h3>
+
+                <label>Project Name</label>
+
+                <input
+                    type="text"
+                    id="editProjectName">
+
+                <label>Goal (hours)</label>
+
+                <input
+                    type="number"
+                    id="editProjectGoal"
+                    min="1">
+
+                <div class="modal-buttons">
+
+                    <button id="cancelEditBtn">
+
+                        Cancel
+
+                    </button>
+
+                    <button id="saveEditBtn">
+
+                        Save
 
                     </button>
 

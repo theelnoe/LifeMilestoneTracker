@@ -1,8 +1,8 @@
 {
     "projects": [
         {
-            "name": "English",
-            "goal": 1500,
+            "name": "English 2026",
+            "goal": 3000,
             "total_hours": 54.32,
             "today": 0,
             "week": 54.32,
@@ -11,6 +11,7 @@
             "last_day": "2026-07-23",
             "last_week": 30,
             "milestones": [
+                25,
                 50,
                 100,
                 200,
@@ -19,7 +20,9 @@
                 750,
                 1000,
                 1250,
-                1500
+                1500,
+                2000,
+                3000
             ],
             "history": [
                 {
@@ -125,88 +128,6 @@
                     "date": "2026-07-22 09:44",
                     "hours": 1.08,
                     "display": "1 h 5 m"
-                }
-            ]
-        },
-        {
-            "name": "1500 Hours English",
-            "goal": 1500,
-            "total_hours": 0,
-            "today": 0,
-            "week": 0,
-            "timer_running": false,
-            "timer_start": null,
-            "last_day": "2026-07-23",
-            "last_week": 30,
-            "milestones": [],
-            "history": []
-        },
-        {
-            "name": "test",
-            "goal": 1000,
-            "total_hours": 0,
-            "today": 0,
-            "week": 0,
-            "timer_running": false,
-            "timer_start": null,
-            "last_day": "2026-07-23",
-            "last_week": 30,
-            "milestones": [],
-            "history": []
-        },
-        {
-            "name": "test2",
-            "goal": 1500,
-            "total_hours": 0,
-            "today": 0,
-            "week": 0,
-            "timer_running": false,
-            "timer_start": null,
-            "last_day": "2026-07-23",
-            "last_week": 30,
-            "milestones": [
-                25,
-                50,
-                100,
-                200,
-                350,
-                500,
-                750,
-                1000,
-                1250,
-                1500
-            ],
-            "history": []
-        },
-        {
-            "name": "2222",
-            "goal": 2222,
-            "total_hours": 0.02,
-            "today": 0.02,
-            "week": 0.02,
-            "timer_running": false,
-            "timer_start": null,
-            "last_day": "2026-07-23",
-            "last_week": 30,
-            "milestones": [
-                25,
-                50,
-                100,
-                200,
-                350,
-                500,
-                750,
-                1000,
-                1250,
-                1500,
-                2000,
-                2222
-            ],
-            "history": [
-                {
-                    "date": "2026-07-23 06:20",
-                    "hours": 0.02,
-                    "display": "1 m"
                 }
             ]
         }

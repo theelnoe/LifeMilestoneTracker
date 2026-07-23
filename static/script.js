@@ -1,7 +1,7 @@
 const projectData = JSON.parse(
     document.getElementById("projectData").textContent
 );
-
+console.log(projectData);
 const currentProject =
     new URLSearchParams(window.location.search).get("project") || 0;
 
@@ -73,6 +73,27 @@ window.onload = function () {
 
     const confirmDeleteBtn =
         document.getElementById("confirmDeleteBtn");
+
+    // -------------------------
+    // Edit Project
+    // -------------------------
+    const editProjectBtn =
+        document.getElementById("editProjectBtn");
+
+    const editProjectModal =
+        document.getElementById("editProjectModal");
+
+    const cancelEditBtn =
+        document.getElementById("cancelEditBtn");
+
+    const saveEditBtn =
+        document.getElementById("saveEditBtn");
+
+    const editProjectName =
+        document.getElementById("editProjectName");
+
+    const editProjectGoal =
+        document.getElementById("editProjectGoal");    
 
 
     // =========================
@@ -148,7 +169,91 @@ window.onload = function () {
 
     confirmDeleteBtn.onclick = function () {
 
-        console.log("Delete confirmed");
+        const form = document.createElement("form");
+
+        form.method = "POST";
+
+        form.action = "/delete_project";
+
+        const inputProject = document.createElement("input");
+
+        inputProject.type = "hidden";
+
+        inputProject.name = "project";
+
+        inputProject.value = getCurrentProject();
+
+        form.appendChild(inputProject);
+
+        document.body.appendChild(form);
+
+        form.submit();
+
+    };
+
+    editProjectBtn.onclick = function () {
+
+        editProjectName.value = projectData.name;
+
+        editProjectGoal.value =
+            projectData.goal;
+
+        editProjectModal.style.display = "flex";
+
+    };
+
+    cancelEditBtn.onclick = function () {
+
+        editProjectModal.style.display = "none";
+
+    };
+
+    saveEditBtn.onclick = function () {
+
+        if (editProjectName.value.trim() === "") {
+
+            alert("Project name is required.");
+
+            return;
+
+        }
+
+        if (editProjectGoal.value <= 0) {
+
+            alert("Goal must be greater than zero.");
+
+            return;
+
+        }
+
+        const form = document.createElement("form");
+
+        form.method = "POST";
+
+        form.action = "/edit_project";
+
+        const inputProject = document.createElement("input");
+        inputProject.type = "hidden";
+        inputProject.name = "project";
+        inputProject.value = getCurrentProject();
+
+        const inputName = document.createElement("input");
+        inputName.type = "hidden";
+        inputName.name = "name";
+        inputName.value = editProjectName.value;
+
+        const inputGoal = document.createElement("input");
+        inputGoal.type = "hidden";
+        inputGoal.name = "goal";
+        inputGoal.value = editProjectGoal.value;
+
+        form.appendChild(inputProject);
+        form.appendChild(inputName);
+        form.appendChild(inputGoal);
+
+        document.body.appendChild(form);
+
+        form.submit();
 
     };
 

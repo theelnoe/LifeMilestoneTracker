@@ -282,6 +282,56 @@ def create_project():
     save_data(data)
 
     return redirect(url_for("index"))
+
+@app.route("/edit_project", methods=["POST"])
+def edit_project():
+
+    data = load_data()
+
+    project_index = int(request.form["project"])
+
+    new_name = request.form["name"].strip()
+
+    new_goal = int(request.form["goal"])
+
+    if new_name == "":
+        return redirect(url_for("index"))
+
+    if new_goal <= 0:
+        return redirect(url_for("index"))
+
+    data["projects"][project_index]["name"] = new_name
+
+    data["projects"][project_index]["goal"] = new_goal
+
+    data["projects"][project_index]["milestones"] = generate_milestones(new_goal)
+
+    save_data(data)
+
+    return redirect(
+        url_for(
+            "index",
+            project=project_index
+        )
+    )
+
+@app.route("/delete_project", methods=["POST"])
+def delete_project():
+
+    data = load_data()
+
+    project_index = int(request.form["project"])
+
+    if len(data["projects"]) <= 1:
+        return redirect(url_for("index"))
+
+    data["projects"].pop(project_index)
+
+    save_data(data)
+
+    return redirect(url_for("index"))
+
+
 # -----------------------------
 # Start Timer
 # -----------------------------
