@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for
 import json
 import os
 from datetime import datetime
+from repository import repository
 
 app = Flask(__name__)
 
@@ -29,7 +30,7 @@ DEFAULT_MILESTONES = [
 
 def load_data():
 
-    if not os.path.exists(DATABASE):
+    if not repository.exists():
 
         os.makedirs("data", exist_ok=True)
 
@@ -56,30 +57,30 @@ def load_data():
                     "milestones":[50,100,200,350,500,750,1000,1250,1500],
 
                     "history":[]
+
                 }
 
             ]
 
         }
 
-        with open(DATABASE,"w") as f:
+        repository.save(default_data)
 
-            json.dump(default_data,f,indent=4)
+    data = repository.load()
 
-    with open(DATABASE,"r") as f:
+    project = data["projects"][0]
 
-        data = json.load(f)
-        project = data["projects"][0]
-        project.setdefault("timer_running", False)
-        project.setdefault("timer_start", None)
-        save_data(data)
-        return data
+    project.setdefault("timer_running", False)
+
+    project.setdefault("timer_start", None)
+
+    save_data(data)
+
+    return data
 
 def save_data(data):
 
-    with open(DATABASE,"w") as f:
-
-        json.dump(data,f,indent=4,ensure_ascii=False)
+    repository.save(data)
 
 def generate_milestones(goal):
 
@@ -407,7 +408,7 @@ def add_time():
     hours = int(body.get("hours", 0))
     minutes = int(body.get("minutes", 0))
 
-    value = hours + (minutes / 60)
+    value = hours + minutes / 60
 
     if value <= 0:
 
@@ -419,17 +420,34 @@ def add_time():
 
         })
 
+    end_time = datetime.now()
+
     register_session(
         project,
-        datetime.now(),
+        end_time,
         value
     )
 
     save_data(data)
+    progress = 0
 
+    if project["goal"] > 0:
+        progress = round(
+            project["total_hours"] / project["goal"] * 100,
+            1
+        )
+        
     return jsonify({
 
         "success": True,
+
+        "goal": project["goal"],
+
+        "milestones": project["milestones"],
+
+        "progress": progress,
+
+        "total_hours": round(project["total_hours"], 6),
 
         "total_text": format_hours(project["total_hours"]),
 
@@ -437,20 +455,7 @@ def add_time():
 
         "week_text": format_hours(project["week"]),
 
-        "total_hours": round(project["total_hours"], 6),
-
-        "goal": project["goal"],
-
-        "progress": round(
-
-            project["total_hours"] /
-            project["goal"] * 100,
-
-            1
-
-        ),
-
-        "milestones": project["milestones"]
+        "new_history": project["history"][-1]
 
     })
 
@@ -471,7 +476,7 @@ def edit_session():
 
     minutes = int(body["minutes"])
 
-    value = hours + (minutes / 60)
+    value = hours + minutes / 60
 
     real_index = len(project["history"]) - 1 - index
 
@@ -482,6 +487,14 @@ def edit_session():
     rebuild_totals(project)
 
     save_data(data)
+
+    progress = 0
+
+    if project["goal"] > 0:
+        progress = round(
+            project["total_hours"] / project["goal"] * 100,
+            1
+        )
 
     return jsonify({
 
@@ -501,14 +514,7 @@ def edit_session():
 
         "display": format_hours(value),
 
-        "progress": round(
-
-            project["total_hours"] /
-            project["goal"] * 100,
-
-            1
-
-        )
+        "progress": progress
 
     })
 
@@ -518,7 +524,7 @@ def edit_session():
 
 @app.route("/delete_session", methods=["POST"])
 def delete_session():
-
+    
     data, project, _ = get_project()
 
     body = request.get_json()
@@ -530,12 +536,17 @@ def delete_session():
     rebuild_totals(project)
 
     save_data(data)
+    print("History before:", len(project["history"]))
+    print("Deleting index:", index)
+    project["history"].pop(index)
+    print("History after:", len(project["history"]))
 
     return jsonify({
 
         "success": True
 
     })
+    
 
 # -----------------------------
 # Main

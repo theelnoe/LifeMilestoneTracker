@@ -33,7 +33,6 @@ window.onload = function () {
 
     updateMilestones();
 
-
     // -------------------------
     // New Project
     // -------------------------
@@ -93,7 +92,6 @@ window.onload = function () {
 
     const editProjectGoal =
         document.getElementById("editProjectGoal");    
-
 
     // -------------------------
     // Edit Session
@@ -175,7 +173,7 @@ window.onload = function () {
 
             editingRow.querySelector(".sessionDisplay").textContent =
                 data.display;
-                
+
             editSessionModal.style.display = "none";
 
         });
@@ -191,14 +189,14 @@ window.onload = function () {
     deleteButtons.forEach(btn => {
 
         btn.onclick = async function () {
-
+            
             if (!confirm("Delete this session?"))
                 return;
 
             const index = this.dataset.index;
 
-            const response = await fetch("/delete_session", {
-
+            const response = await fetch("/delete_session?project=" + currentProject, {
+            
                 method: "POST",
 
                 headers: {
@@ -214,9 +212,9 @@ window.onload = function () {
                 })
 
             });
-
+            
             const result = await response.json();
-
+            
             if (result.success) {
 
                 location.reload();
@@ -397,7 +395,6 @@ window.onload = function () {
    
 updateMilestones();
 
-
 // ========================================
 // Project
 // ========================================
@@ -446,7 +443,7 @@ function updateMilestones() {
 }
 
 function refreshDashboard(data) {
-
+    console.log("A");
     // ---------- Update project data ----------
 
     projectData.total = data.total_hours;
@@ -475,9 +472,11 @@ function refreshDashboard(data) {
         data.total_text;
 
     // ---------- Milestones ----------
-
+    console.log("B");
     updateMilestones();
+    console.log("C");
     buildMilestoneBar();
+    console.log("D");
 }
 
 // ========================================
@@ -548,7 +547,6 @@ function restoreTimer() {
 
 }
 
-
 // ========================================
 // Live Timer
 // ========================================
@@ -612,7 +610,6 @@ function stopTimer() {
 
 }
 
-
 // ========================================
 // Add Time Dialog
 // ========================================
@@ -623,13 +620,11 @@ function showAddTimeDialog() {
 
 }
 
-
 function closeDialog() {
 
     document.getElementById("addTimeModal").style.display = "none";
 
 }
-
 
 // ========================================
 // Save Manual Time
@@ -687,6 +682,10 @@ function saveManualTime() {
 
         refreshDashboard(data);
 
+        addHistoryRow(
+            data.new_history,
+            0
+        );
     });
 
 }
@@ -735,5 +734,146 @@ function buildMilestoneBar() {
 
     document.getElementById("milestoneProgress").innerHTML =
         `${current.toFixed(1)} / ${goal} h`;
+
+}
+
+function createHistoryRow(item, index) {
+
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+
+        <td>${item.date}</td>
+
+        <td>${item.display}</td>
+
+        <td>
+
+            <button
+                class="editSessionBtn"
+                data-index="${index}">
+                ✏️
+            </button>
+
+            <button
+                class="deleteSessionBtn"
+                data-index="${index}">
+                🗑
+            </button>
+
+        </td>
+
+    `;
+
+    return row;
+
+}
+
+function addHistoryRow(item, index) {
+
+    const tbody = document.querySelector("tbody");
+
+    const row = createHistoryRow(item, index);
+
+    attachHistoryEvents(row);
+
+    tbody.prepend(row);
+
+    refreshHistoryIndexes();
+}
+
+function attachHistoryEvents(row) {
+
+    row.querySelector(".editSessionBtn").onclick =
+        onEditSession;
+
+    row.querySelector(".deleteSessionBtn").onclick =
+        onDeleteSession;
+
+}
+
+function onEditSession() {
+
+    editingSessionIndex = parseInt(this.dataset.index);
+
+    const row = this.closest("tr");
+
+    const timeText = row.cells[1].textContent.trim();
+
+    let hours = 0;
+    let minutes = 0;
+
+    const hourMatch = timeText.match(/(\d+)\s*h/);
+    const minuteMatch = timeText.match(/(\d+)\s*m/);
+
+    if (hourMatch)
+        hours = parseInt(hourMatch[1]);
+
+    if (minuteMatch)
+        minutes = parseInt(minuteMatch[1]);
+
+    document.getElementById("editHours").value = hours;
+
+    document.getElementById("editMinutes").value = minutes;
+
+    editSessionModal.style.display = "flex";
+
+}
+
+async function onDeleteSession() {
+
+    console.log("DELETE CLICKED");
+
+    if (!confirm("Delete this session?"))
+        return;
+
+    const index = this.dataset.index;
+
+    const response = await fetch(
+        "/delete_session?project=" + currentProject,
+        {
+
+            method: "POST",
+
+            headers: {
+
+                "Content-Type": "application/json"
+
+            },
+
+            body: JSON.stringify({
+
+                index: index
+
+            })
+
+        }
+    );
+
+    const result = await response.json();
+
+    console.log(result);
+
+    if (result.success) {
+
+        location.reload();
+
+    }
+}
+
+function refreshHistoryIndexes() {
+
+    const rows =
+        document.querySelectorAll("tbody tr");
+
+    rows.forEach((row, index) => {
+
+        row.querySelector(".editSessionBtn")
+            .dataset.index = index;
+
+        row.querySelector(".deleteSessionBtn")
+            .dataset.index = index;
+
+    });
 
 }
