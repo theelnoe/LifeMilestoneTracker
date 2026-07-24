@@ -524,27 +524,24 @@ def edit_session():
 
 @app.route("/delete_session", methods=["POST"])
 def delete_session():
-    
+
     data, project, _ = get_project()
 
     body = request.get_json()
 
     index = int(body["index"])
 
-    project["history"].pop(index)
+    # تاریخچه در UI برعکس نمایش داده می‌شود
+    real_index = len(project["history"]) - 1 - index
+
+    project["history"].pop(real_index)
 
     rebuild_totals(project)
 
     save_data(data)
-    print("History before:", len(project["history"]))
-    print("Deleting index:", index)
-    project["history"].pop(index)
-    print("History after:", len(project["history"]))
 
     return jsonify({
-
         "success": True
-
     })
     
 
