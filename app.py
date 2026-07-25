@@ -61,6 +61,8 @@ def load_data():
 
     project.setdefault("timer_start", None)
 
+    project.setdefault("unit_id", 1)
+    
     save_data(data)
 
     return data
@@ -137,12 +139,14 @@ def create_project():
 
     name = request.form["name"].strip()
     goal = int(request.form["goal"])
+    unit_id = int(request.form["unit_id"])
 
     data = load_data()
 
     new_project = {
         "name": name,
         "goal": goal,
+        "unit_id": unit_id,
         "total_hours": 0,
         "today": 0,
         "week": 0,

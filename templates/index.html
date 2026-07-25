@@ -335,24 +335,33 @@
     }
     </script>
 
-       <div id="newProjectModal" class="modal" style="display:none;">
+        <div id="newProjectModal" class="modal" style="display:none;">
 
-        <div class="modal-content">
+            <div class="modal-content">
 
-        <h3>New Project</h3>
+                <h3>New Project</h3>
 
-        <label>Project Name</label>
+                <label>Project Name</label>
+                <input
+                    type="text"
+                    id="newProjectName">
 
-        <input
-            type="text"
-            id="newProjectName">
+                <label>Goal (hours)</label>
+                <input
+                    type="number"
+                    id="newProjectGoal"
+                    min="1">
 
-        <label>Goal (hours)</label>
+                <label>Unit</label>
+                <select name="unit_id">
 
-        <input
-            type="number"
-            id="newProjectGoal"
-            min="1">
+                    <option value="1">Hours</option>
+
+                    <option value="2">Books</option>
+
+                    <option value="3">Articles</option>
+
+                </select>
 
                 <div class="modal-buttons">
 

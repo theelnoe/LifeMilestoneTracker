@@ -55,6 +55,8 @@ window.onload = function () {
     const newProjectGoal =
         document.getElementById("newProjectGoal");
 
+    const newProjectUnit =
+        document.querySelector("#newProjectModal select");
 
     // -------------------------
     // Delete Project
@@ -275,8 +277,14 @@ window.onload = function () {
         inputGoal.name = "goal";
         inputGoal.value = newProjectGoal.value;
 
+        const inputUnit = document.createElement("input");
+        inputUnit.type = "hidden";
+        inputUnit.name = "unit_id";
+        inputUnit.value = newProjectUnit.value;
+
         form.appendChild(inputName);
         form.appendChild(inputGoal);
+        form.appendChild(inputUnit);
 
         document.body.appendChild(form);
 
