@@ -3,26 +3,30 @@ import json
 import os
 from datetime import datetime
 from repository import repository
+from project_service import (
+    generate_milestones,
+    format_hours
+)
 
 app = Flask(__name__)
 
 DATABASE = "data/database.json"
 
-DEFAULT_MILESTONES = [
-    25,
-    50,
-    100,
-    200,
-    350,
-    500,
-    750,
-    1000,
-    1250,
-    1500,
-    2000,
-    3000,
-    5000
-]
+# DEFAULT_MILESTONES = [
+#     25,
+#     50,
+#     100,
+#     200,
+#     350,
+#     500,
+#     750,
+#     1000,
+#     1250,
+#     1500,
+#     2000,
+#     3000,
+#     5000
+# ]
 
 # -----------------------------
 # Database
@@ -82,18 +86,18 @@ def save_data(data):
 
     repository.save(data)
 
-def generate_milestones(goal):
+# def generate_milestones(goal):
 
-    milestones = []
+#     milestones = []
 
-    for m in DEFAULT_MILESTONES:
+#     for m in DEFAULT_MILESTONES:
 
-        if m < goal:
-            milestones.append(m)
+#         if m < goal:
+#             milestones.append(m)
 
-    milestones.append(goal)
+#     milestones.append(goal)
 
-    return milestones
+#     return milestones
 
 def rebuild_totals(project):
 
@@ -176,21 +180,21 @@ def get_project():
 
     return data, project, index
 
-def format_hours(value):
+# def format_hours(value):
 
-    total_minutes = round(value * 60)
+#     total_minutes = round(value * 60)
 
-    hours = total_minutes // 60
+#     hours = total_minutes // 60
 
-    minutes = total_minutes % 60
+#     minutes = total_minutes % 60
 
-    if hours == 0:
-        return f"{minutes} m"
+#     if hours == 0:
+#         return f"{minutes} m"
 
-    if minutes == 0:
-        return f"{hours} h"
+#     if minutes == 0:
+#         return f"{hours} h"
 
-    return f"{hours} h {minutes} m"
+#     return f"{hours} h {minutes} m"
 
 # -----------------------------
 # Home
