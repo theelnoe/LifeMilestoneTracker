@@ -1,0 +1,166 @@
+{
+    "users": [
+        {
+            "User_ID": 1,
+            "Name": "Elnoe"
+        }
+    ],
+    "domains": [],
+    "activities": [],
+    "domain_activities": [],
+    "units": [
+        {
+            "Unit_ID": 1,
+            "Name": "Hours",
+            "Measurement_Type": "Time"
+        }
+    ],
+    "projects": [
+        {
+            "Project_ID": 1,
+            "User_ID": 1,
+            "Domain_ID": 0,
+            "Unit_ID": 1,
+            "Name": "English",
+            "Goal": 1500,
+            "Is_Active": true
+        },
+        {
+            "Project_ID": 2,
+            "User_ID": 1,
+            "Domain_ID": 0,
+            "Unit_ID": 1,
+            "Name": "Python",
+            "Goal": 1000,
+            "Is_Active": true
+        },
+        {
+            "Project_ID": 3,
+            "User_ID": 1,
+            "Domain_ID": 0,
+            "Unit_ID": 1,
+            "Name": "test1",
+            "Goal": 1000,
+            "Is_Active": true
+        },
+        {
+            "Project_ID": 4,
+            "User_ID": 1,
+            "Domain_ID": 0,
+            "Unit_ID": 1,
+            "Name": "tt",
+            "Goal": 10000,
+            "Is_Active": true
+        }
+    ],
+    "sessions": [
+        {
+            "Session_ID": 1,
+            "Project_ID": 1,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-07-23 21:15",
+            "Value": 122,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 2,
+            "Project_ID": 1,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-07-23 21:43",
+            "Value": 742,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 3,
+            "Project_ID": 1,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-07-23 21:44",
+            "Value": 442,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 4,
+            "Project_ID": 1,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-07-23 21:45",
+            "Value": 55,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 5,
+            "Project_ID": 2,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-07-22 08:24",
+            "Value": 1,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 6,
+            "Project_ID": 2,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-07-22 08:25",
+            "Value": 120,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 7,
+            "Project_ID": 2,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-07-22 09:45",
+            "Value": 1,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 8,
+            "Project_ID": 3,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-07-23 20:51",
+            "Value": 1,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 9,
+            "Project_ID": 3,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-07-23 21:00",
+            "Value": 240,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 10,
+            "Project_ID": 3,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-07-23 22:03",
+            "Value": 60,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 11,
+            "Project_ID": 4,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-07-23 22:05",
+            "Value": 1,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 12,
+            "Project_ID": 4,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-07-23 22:05",
+            "Value": 120,
+            "Material": "",
+            "Notes": ""
+        }
+    ]
+}
