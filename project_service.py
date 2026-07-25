@@ -1,4 +1,5 @@
 from datetime import datetime
+from utils import format_duration, calculate_elapsed_minutes
 
 DEFAULT_MILESTONES = [
     25,
@@ -29,27 +30,27 @@ def generate_milestones(goal):
 
     return milestones
 
-def format_hours(value):
+# def format_hours(value):
 
-    total_minutes = round(value * 60)
+#     total_minutes = round(value * 60)
 
-    hours = total_minutes // 60
+#     hours = total_minutes // 60
 
-    minutes = total_minutes % 60
+#     minutes = total_minutes % 60
 
-    if hours == 0:
-        return f"{minutes} m"
+#     if hours == 0:
+#         return f"{minutes} m"
 
-    if minutes == 0:
-        return f"{hours} h"
+#     if minutes == 0:
+#         return f"{hours} h"
 
-    return f"{hours} h {minutes} m"
+#     return f"{hours} h {minutes} m"
 
-def calculate_elapsed_hours(start_time, end_time):
+# def calculate_elapsed_hours(start_time, end_time):
 
-    elapsed = end_time - start_time
+#     elapsed = end_time - start_time
 
-    return elapsed.total_seconds() / 3600
+#     return elapsed.total_seconds() / 3600
 
 def add_history(project, end, hours):
 
@@ -59,7 +60,7 @@ def add_history(project, end, hours):
 
         "hours": round(hours, 6),
 
-        "display": format_hours(hours)
+        "display": format_duration(hours)
 
     })
 

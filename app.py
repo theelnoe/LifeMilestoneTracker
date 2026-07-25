@@ -5,11 +5,10 @@ from datetime import datetime
 from repository import repository
 from project_service import (
     generate_milestones,
-    format_hours,
-    calculate_elapsed_hours,
     rebuild_totals,
     register_session
 )
+from utils import format_duration, calculate_elapsed_minutes
 
 app = Flask(__name__)
 
@@ -227,11 +226,11 @@ def index():
 
         progress=progress,
 
-        total_text=format_hours(project["total_hours"]),
+        total_text=format_duration(project["total_hours"]),
 
-        today_text=format_hours(project["today"]),
+        today_text=format_duration(project["today"]),
 
-        week_text=format_hours(project["week"]),
+        week_text=format_duration(project["week"]),
 
         history_for_ui=history_for_ui
 
@@ -368,8 +367,8 @@ def stop_timer():
 
     start = datetime.fromisoformat(project["timer_start"])
     end = datetime.now()
-    hours = calculate_elapsed_hours(start, end)
-
+    minutes = calculate_elapsed_minutes(start, end)
+    hours = minutes / 60
     # اگر کمتر از 1 دقیقه بود، ثبت نکن
     if hours < (1 / 60):
 
@@ -397,7 +396,7 @@ def stop_timer():
 
         "success": True,
 
-        "hours": format_hours(hours)
+        "hours": format_duration(hours)
 
     })
 
@@ -456,11 +455,11 @@ def add_time():
 
         "total_hours": round(project["total_hours"], 6),
 
-        "total_text": format_hours(project["total_hours"]),
+        "total_text": format_duration(project["total_hours"]),
 
-        "today_text": format_hours(project["today"]),
+        "today_text": format_duration(project["today"]),
 
-        "week_text": format_hours(project["week"]),
+        "week_text": format_duration(project["week"]),
 
         "new_history": project["history"][-1]
 
@@ -489,7 +488,7 @@ def edit_session():
 
     project["history"][real_index]["hours"] = round(value, 2)
 
-    project["history"][real_index]["display"] = format_hours(value)
+    project["history"][real_index]["display"] = format_duration(value)
 
     rebuild_totals(project)
 
@@ -513,13 +512,13 @@ def edit_session():
 
         "total_hours": project["total_hours"],
 
-        "total_text": format_hours(project["total_hours"]),
+        "total_text": format_duration(project["total_hours"]),
 
-        "today_text": format_hours(project["today"]),
+        "today_text": format_duration(project["today"]),
 
-        "week_text": format_hours(project["week"]),
+        "week_text": format_duration(project["week"]),
 
-        "display": format_hours(value),
+        "display": format_duration(value),
 
         "progress": progress
 
