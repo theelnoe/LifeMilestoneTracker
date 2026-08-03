@@ -1,163 +1,385 @@
 {
+    "users": [
+        {
+            "User_ID": 1,
+            "Name": "Elnoe"
+        }
+    ],
+    "domains": [
+        {
+            "Domain_ID": 1,
+            "Name": "English",
+            "Is_Active": true
+        },
+        {
+            "Domain_ID": 2,
+            "Name": "Programming",
+            "Is_Active": true
+        },
+        {
+            "Domain_ID": 3,
+            "Name": "Writing",
+            "Is_Active": true
+        }
+    ],
+    "activities": [
+        {
+            "Activity_ID": 1,
+            "Name": "Reading",
+            "Is_Active": true
+        },
+        {
+            "Activity_ID": 2,
+            "Name": "Listening",
+            "Is_Active": true
+        },
+        {
+            "Activity_ID": 3,
+            "Name": "Writing",
+            "Is_Active": true
+        }
+    ],
+    "domain_activities": [
+        {
+            "DomainActivity_ID": 1,
+            "Domain_ID": 1,
+            "Activity_ID": 1
+        },
+        {
+            "DomainActivity_ID": 2,
+            "Domain_ID": 1,
+            "Activity_ID": 2
+        },
+        {
+            "DomainActivity_ID": 3,
+            "Domain_ID": 3,
+            "Activity_ID": 3
+        }
+    ],
+    "units": [
+        {
+            "Unit_ID": 1,
+            "Name": "Hours",
+            "Measurement_Type": "Time"
+        }
+    ],
     "projects": [
         {
-            "name": "English",
-            "goal": 1500,
-            "total_hours": 22.69,
-            "today": 22.69,
-            "week": 22.69,
-            "timer_running": false,
-            "timer_start": null,
-            "last_day": "2026-07-23",
-            "last_week": 30,
-            "milestones": [
-                25,
-                50,
-                100,
-                200,
-                350,
-                500,
-                750,
-                1000,
-                1250,
-                1500
-            ],
-            "history": [
-                {
-                    "date": "2026-07-23 21:15",
-                    "hours": 2.03,
-                    "display": "2 h 2 m"
-                },
-                {
-                    "date": "2026-07-23 21:43",
-                    "hours": 12.37,
-                    "display": "12 h 22 m"
-                },
-                {
-                    "date": "2026-07-23 21:44",
-                    "hours": 7.37,
-                    "display": "7 h 22 m"
-                },
-                {
-                    "date": "2026-07-23 21:45",
-                    "hours": 0.92,
-                    "display": "55 m"
-                }
-            ]
+            "Project_ID": 1,
+            "User_ID": 1,
+            "Domain_ID": 1,
+            "Unit_ID": 1,
+            "Name": "English",
+            "Goal": 1500,
+            "Is_Active": true
         },
         {
-            "name": "Python",
-            "goal": 1000,
-            "total_hours": 2.04,
-            "today": 2.04,
-            "week": 2.04,
-            "timer_running": false,
-            "timer_start": null,
-            "last_day": "2026-07-22",
-            "last_week": 30,
-            "milestones": [
-                50,
-                100,
-                200,
-                350,
-                500,
-                750,
-                1000
-            ],
-            "history": [
-                {
-                    "date": "2026-07-22 08:24",
-                    "hours": 0.02,
-                    "display": "1 m"
-                },
-                {
-                    "date": "2026-07-22 08:25",
-                    "hours": 2.0,
-                    "display": "2 h"
-                },
-                {
-                    "date": "2026-07-22 09:45",
-                    "hours": 0.02,
-                    "display": "1 m"
-                }
-            ]
+            "Project_ID": 2,
+            "User_ID": 1,
+            "Domain_ID": 2,
+            "Unit_ID": 1,
+            "Name": "Python",
+            "Goal": 1000,
+            "Is_Active": true
         },
         {
-            "name": "test1",
-            "goal": 1000,
-            "total_hours": 5.02,
-            "today": 5.02,
-            "week": 5.02,
-            "timer_running": true,
-            "timer_start": "2026-07-23T21:00:44.784593",
-            "last_day": "",
-            "last_week": 0,
-            "milestones": [
-                25,
-                50,
-                100,
-                200,
-                350,
-                500,
-                750,
-                1000
-            ],
-            "history": [
-                {
-                    "date": "2026-07-23 20:51",
-                    "hours": 0.016792,
-                    "display": "1 m"
-                },
-                {
-                    "date": "2026-07-23 21:00",
-                    "hours": 4.0,
-                    "display": "4 h"
-                },
-                {
-                    "date": "2026-07-23 22:03",
-                    "hours": 1.0,
-                    "display": "1 h"
-                }
-            ]
+            "Project_ID": 3,
+            "User_ID": 1,
+            "Domain_ID": 0,
+            "Unit_ID": 1,
+            "Name": "test1",
+            "Goal": 1000,
+            "Is_Active": true
         },
         {
-            "name": "tt",
-            "goal": 10000,
-            "total_hours": 2.02,
-            "today": 2.02,
-            "week": 2.02,
-            "timer_running": false,
-            "timer_start": null,
-            "last_day": "",
-            "last_week": 0,
-            "milestones": [
-                25,
-                50,
-                100,
-                200,
-                350,
-                500,
-                750,
-                1000,
-                1250,
-                1500,
-                2000,
-                3000,
-                5000,
-                10000
-            ],
-            "history": [
-                {
-                    "date": "2026-07-23 22:05",
-                    "hours": 0.017147,
-                    "display": "1 m"
-                },
-                {
-                    "date": "2026-07-23 22:05",
-                    "hours": 2.0,
-                    "display": "2 h"
-                }
-            ]
+            "Project_ID": 4,
+            "User_ID": 1,
+            "Domain_ID": 0,
+            "Unit_ID": 1,
+            "Name": "tt",
+            "Goal": 10000,
+            "Is_Active": true
+        },
+        {
+            "Project_ID": 5,
+            "User_ID": 1,
+            "Domain_ID": 0,
+            "Unit_ID": 1,
+            "Name": "test",
+            "Goal": 111,
+            "Is_Active": true
+        },
+        {
+            "Project_ID": 6,
+            "User_ID": 1,
+            "Domain_ID": 1,
+            "Unit_ID": 1,
+            "Name": "final",
+            "Goal": 235,
+            "Is_Active": true
+        }
+    ],
+    "sessions": [
+        {
+            "Session_ID": 1,
+            "Project_ID": 1,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-07-23 21:15",
+            "Value": 122,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 2,
+            "Project_ID": 1,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-07-23 21:43",
+            "Value": 742,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 3,
+            "Project_ID": 1,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-07-23 21:44",
+            "Value": 442,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 4,
+            "Project_ID": 1,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-07-23 21:45",
+            "Value": 55,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 5,
+            "Project_ID": 2,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-07-22 08:24",
+            "Value": 1,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 6,
+            "Project_ID": 2,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-07-22 08:25",
+            "Value": 120,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 7,
+            "Project_ID": 2,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-07-22 09:45",
+            "Value": 1,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 8,
+            "Project_ID": 3,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-07-23 20:51",
+            "Value": 1,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 9,
+            "Project_ID": 3,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-07-23 21:00",
+            "Value": 240,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 10,
+            "Project_ID": 3,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-07-23 22:03",
+            "Value": 60,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 12,
+            "Project_ID": 4,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-07-23 22:05",
+            "Value": 120,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 13,
+            "Project_ID": 1,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-08-01 13:03",
+            "Value": 1.0,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 14,
+            "Project_ID": 1,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-08-01 13:22",
+            "Value": 3,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 15,
+            "Project_ID": 2,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-08-01 13:43",
+            "Value": 3,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 16,
+            "Project_ID": 2,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-08-01 15:25",
+            "Value": 2,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 17,
+            "Project_ID": 2,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-08-01 16:15",
+            "Value": 12,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 18,
+            "Project_ID": 4,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-08-01 18:28",
+            "Value": 1,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 19,
+            "Project_ID": 6,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-08-01 21:26",
+            "Value": 2,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 20,
+            "Project_ID": 6,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-08-01 21:26",
+            "Value": 123,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 21,
+            "Project_ID": 6,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-08-02 08:41",
+            "Value": 1,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 22,
+            "Project_ID": 6,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-08-02 08:42",
+            "Value": 225,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 23,
+            "Project_ID": 6,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-08-02 09:36",
+            "Value": 72,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 24,
+            "Project_ID": 6,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-08-02 09:47",
+            "Value": 34,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 25,
+            "Project_ID": 6,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-08-02 09:51",
+            "Value": 175,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 27,
+            "Project_ID": 6,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-08-02 09:55",
+            "Value": 6,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 28,
+            "Project_ID": 6,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-08-02 10:07",
+            "Value": 242,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 29,
+            "Project_ID": 6,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-08-02 10:12",
+            "Value": 90,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 31,
+            "Project_ID": 6,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-08-02 10:18",
+            "Value": 72,
+            "Material": "",
+            "Notes": ""
+        },
+        {
+            "Session_ID": 33,
+            "Project_ID": 6,
+            "DomainActivity_ID": 0,
+            "StartTime": "2026-08-02 19:38",
+            "Value": 600,
+            "Material": "",
+            "Notes": ""
         }
     ]
 }

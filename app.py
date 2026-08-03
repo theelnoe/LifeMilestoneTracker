@@ -1,469 +1,234 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
-import os
 from datetime import datetime
-from repository import repository
-from project_service import (
-    generate_milestones,
-    rebuild_totals,
-    register_session
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    url_for
 )
-from utils import format_duration, calculate_elapsed_minutes
+from project_service import (
+    get_projects,
+    get_project_view,
+    get_project_history,
+    create_project,
+    update_project,
+    delete_project,
+    create_session,
+    update_session,
+    delete_session,
+    finish_timer,
+    format_minutes
+)
+
+timer_state = {
+    "running": False,
+    "start": None
+}
 
 app = Flask(__name__)
 
-# -----------------------------
-# Database
-# -----------------------------
 
-def load_data():
-
-    if not repository.exists():
-
-        os.makedirs("data", exist_ok=True)
-
-        default_data = {
-
-            "projects":[
-
-                {
-
-                    "name":"English",
-
-                    "goal":1500,
-
-                    "total_hours":0,
-
-                    "today":0,
-
-                    "week":0,
-
-                    "timer_running":False,
-
-                    "timer_start":None,
-
-                    "milestones":[50,100,200,350,500,750,1000,1250,1500],
-
-                    "history":[]
-
-                }
-
-            ]
-
-        }
-
-        repository.save(default_data)
-
-    data = repository.load()
-
-    project = data["projects"][0]
-
-    project.setdefault("timer_running", False)
-
-    project.setdefault("timer_start", None)
-
-    project.setdefault("unit_id", 1)
-    
-    save_data(data)
-
-    return data
-
-def save_data(data):
-
-    repository.save(data)
-
-# -----------------------------
-# Helpers
-# -----------------------------
-
-def prepare_project():
-
-    data, project, current_project = get_project()
-
-    rebuild_totals(project)
-
-    return data, project, current_project
-
-def get_project():
-
-    data = load_data()
-
-    index = request.args.get("project", 0, type=int)
-
-    if index < 0 or index >= len(data["projects"]):
-        index = 0
-
-    project = data["projects"][index]
-
-    return data, project, index
-
-# -----------------------------
-# Home
-# -----------------------------
 
 @app.route("/")
 def index():
+    index = request.args.get("project", 0, type=int)
 
-    data, project, current_project = prepare_project()
-
-    progress = round(
-        project["total_hours"] / project["goal"] * 100,
-        1
-    )
-
-    history_for_ui = list(reversed(project["history"]))
-
+    projects = get_projects()
+    project = get_project_view(index)
+    
+    sessions = get_project_history(project["id"])
+    
     return render_template(
-
         "index.html",
-
-        data=data,
-
-        current_project=current_project,
-
+        projects=projects,
         project=project,
-
-        progress=progress,
-
-        total_text=format_duration(project["total_hours"]),
-
-        today_text=format_duration(project["today"]),
-
-        week_text=format_duration(project["week"]),
-
-        history_for_ui=history_for_ui
-
+        sessions=sessions,
+        current_project=project["current_project"]
     )
 
 @app.route("/create_project", methods=["POST"])
-def create_project():
+def create_project_route():
 
     name = request.form["name"].strip()
     goal = int(request.form["goal"])
-    unit_id = int(request.form["unit_id"])
+    domain_id = int(request.form["domain_id"])
 
-    data = load_data()
+    create_project(name, goal, domain_id)
 
-    new_project = {
-        "name": name,
-        "goal": goal,
-        "unit_id": unit_id,
-        "total_hours": 0,
-        "today": 0,
-        "week": 0,
-        "timer_running": False,
-        "timer_start": None,
-        "last_day": "",
-        "last_week": 0,
-        "milestones": generate_milestones(goal),
-        "history": []
-    }
-
-    data["projects"].append(new_project)
-
-    save_data(data)
-
-    return redirect(url_for("index"))
+    return redirect("/")
 
 @app.route("/edit_project", methods=["POST"])
-def edit_project():
+def edit_project_route():
 
-    data = load_data()
+    project_id = int(request.form["project_id"])
+    name = request.form["name"].strip()
+    goal = int(request.form["goal"])
+    domain_id = int(request.form["domain_id"])
 
-    project_index = int(request.form["project"])
-
-    new_name = request.form["name"].strip()
-
-    new_goal = int(request.form["goal"])
-
-    if new_name == "":
-        return redirect(url_for("index"))
-
-    if new_goal <= 0:
-        return redirect(url_for("index"))
-
-    data["projects"][project_index]["name"] = new_name
-
-    data["projects"][project_index]["goal"] = new_goal
-
-    data["projects"][project_index]["milestones"] = generate_milestones(new_goal)
-
-    save_data(data)
+    update_project(
+        project_id,
+        name,
+        goal,
+        domain_id
+    )
 
     return redirect(
         url_for(
             "index",
-            project=project_index
+            project=request.form["project_index"]
         )
     )
 
 @app.route("/delete_project", methods=["POST"])
-def delete_project():
+def delete_project_route():
 
-    data = load_data()
+    project_id = int(request.form["project_id"])
 
-    project_index = int(request.form["project"])
+    delete_project(project_id)
 
-    if len(data["projects"]) <= 1:
-        return redirect(url_for("index"))
+    return redirect("/")
 
-    data["projects"].pop(project_index)
+@app.route("/add_time", methods=["POST"])
+def add_time_route():
 
-    save_data(data)
+    data = request.get_json()
 
-    return redirect(url_for("index"))
+    project_index = int(data["project_id"])
 
-# -----------------------------
-# Start Timer
-# -----------------------------
+    projects = get_projects()
+    project_id = projects[project_index]["Project_ID"]
+
+    hours = data["hours"]
+    minutes = data["minutes"]
+
+    value = hours * 60 + minutes
+
+    new_session = create_session(
+        project_id,
+        value
+    )
+
+    project = get_project_view(project_index)
+
+    new_history = {
+        "id": new_session["Session_ID"],
+        "date": new_session["StartTime"],
+        "value": new_session["Value"],
+        "display": format_minutes(new_session["Value"])
+    }
+
+    return {
+        "success": True,
+
+        "total_hours": project["total"],
+        "total_text": project["total_display"],
+        "today_text": project["today_display"],
+        "week_text": project["week_display"],
+
+        "goal": project["goal"],
+        "progress": project["progress"],
+        "milestones": project["milestones"],
+
+        "new_history": new_history
+    }
+
+@app.route("/edit_session", methods=["POST"])
+def edit_session_route():
+
+    data = request.get_json()
+
+    project_index = int(data["project_id"])
+
+    session_id = int(data["session_id"])
+
+    hours = int(data["hours"])
+
+    minutes = int(data["minutes"])
+
+    value = hours * 60 + minutes
+
+    update_session(
+        session_id,
+        value
+    )
+
+    return {
+        "success": True,
+        "display": format_minutes(value)
+    }
+
+@app.route("/delete_session", methods=["POST"])
+def delete_session_route():
+
+    data = request.get_json()
+
+    project_id = int(data["project_id"])
+    session_id = int(data["session_id"])
+
+    delete_session(session_id)
+
+    return {
+        "success": True
+    }
 
 @app.route("/start_timer", methods=["POST"])
 def start_timer():
-    
-    data, project, _ = get_project()
 
-    if not project["timer_running"]:
+    project_index = int(request.args.get("project", 0))
 
-        project["timer_running"] = True
+    if not timer_state["running"]:
+        timer_state["running"] = True
+        timer_state["start"] = datetime.now()
 
-        project["timer_start"] = datetime.now().isoformat()
-
-        save_data(data)
-
-    return jsonify({
+    return {
         "success": True
-    })
-
-# -----------------------------
-# Timer Status
-# -----------------------------
+    }
 
 @app.route("/timer_status")
 def timer_status():
 
-    _, project, _ = get_project()
-
-    return jsonify({
-
-        "running": project["timer_running"],
-
-        "start": project["timer_start"]
-
-    })
-
-# -----------------------------
-# Stop Timer
-# -----------------------------
+    return {
+        "running": timer_state["running"],
+        "start": str(timer_state["start"])
+    }
 
 @app.route("/stop_timer", methods=["POST"])
 def stop_timer():
 
-    data, project, _ = get_project()
-
-    if not project["timer_running"]:
-
-        return jsonify({
-            "success": False
-        })
-
-    start = datetime.fromisoformat(project["timer_start"])
-    end = datetime.now()
-    minutes = calculate_elapsed_minutes(start, end)
-    hours = minutes / 60
-    # اگر کمتر از 1 دقیقه بود، ثبت نکن
-    if hours < (1 / 60):
-
-        project["timer_running"] = False
-        project["timer_start"] = None
-
-        save_data(data)
-
-        return jsonify({
-
-            "success": True,
-
-            "hours": 0
-
-        })
-
-    register_session(project, end, hours)
-
-    project["timer_running"] = False
-    project["timer_start"] = None
-
-    save_data(data)
-
-    return jsonify({
-
-        "success": True,
-
-        "hours": format_duration(hours)
-
-    })
-
-# -----------------------------
-# Add Time
-# -----------------------------
-
-@app.route("/add_time", methods=["POST"])
-def add_time():
-
-    data, project, _ = get_project()
-
-    body = request.get_json()
-
-    hours = int(body.get("hours", 0))
-    minutes = int(body.get("minutes", 0))
-
-    value = hours + minutes / 60
-
-    if value <= 0:
-
-        return jsonify({
-
+    if not timer_state["running"]:
+        return {
             "success": False,
+            "message": "Timer is not running"
+        }
 
-            "message": "Invalid time"
+    start = timer_state["start"]
+    end = datetime.now()
 
-        })
+    project_index = int(request.args.get("project", 0))
+    projects = get_projects()
+    project_id = projects[project_index]["Project_ID"]
 
-    end_time = datetime.now()
-
-    register_session(
-        project,
-        end_time,
-        value
+    minutes = finish_timer(
+        start,
+        project_id
     )
 
-    save_data(data)
-    progress = 0
+    if minutes == 0:
+        timer_state["running"] = False
+        timer_state["start"] = None
 
-    if project["goal"] > 0:
-        progress = round(
-            project["total_hours"] / project["goal"] * 100,
-            1
-        )
-        
-    return jsonify({
+        return {
+            "success": True,
+            "minutes": 0
+        }
 
+    timer_state["running"] = False
+    timer_state["start"] = None
+
+    return {
         "success": True,
-
-        "goal": project["goal"],
-
-        "milestones": project["milestones"],
-
-        "progress": progress,
-
-        "total_hours": round(project["total_hours"], 6),
-
-        "total_text": format_duration(project["total_hours"]),
-
-        "today_text": format_duration(project["today"]),
-
-        "week_text": format_duration(project["week"]),
-
-        "new_history": project["history"][-1]
-
-    })
-
-# -----------------------------
-# Edit Session
-# -----------------------------
-
-@app.route("/edit_session", methods=["POST"])
-def edit_session():
-
-    data, project, _ = get_project()
-
-    body = request.get_json()
-
-    index = body["index"]
-
-    hours = int(body["hours"])
-
-    minutes = int(body["minutes"])
-
-    value = hours + minutes / 60
-
-    real_index = len(project["history"]) - 1 - index
-
-    project["history"][real_index]["hours"] = round(value, 2)
-
-    project["history"][real_index]["display"] = format_duration(value)
-
-    rebuild_totals(project)
-
-    save_data(data)
-
-    progress = 0
-
-    if project["goal"] > 0:
-        progress = round(
-            project["total_hours"] / project["goal"] * 100,
-            1
-        )
-
-    return jsonify({
-
-        "success": True,
-
-        "goal": project["goal"],
-
-        "milestones": project["milestones"],
-
-        "total_hours": project["total_hours"],
-
-        "total_text": format_duration(project["total_hours"]),
-
-        "today_text": format_duration(project["today"]),
-
-        "week_text": format_duration(project["week"]),
-
-        "display": format_duration(value),
-
-        "progress": progress
-
-    })
-
-# -----------------------------
-# Delete Session
-# -----------------------------
-
-@app.route("/delete_session", methods=["POST"])
-def delete_session():
-
-    data, project, _ = get_project()
-
-    body = request.get_json()
-
-    index = int(body["index"])
-
-    # تاریخچه در UI برعکس نمایش داده می‌شود
-    real_index = len(project["history"]) - 1 - index
-
-    project["history"].pop(real_index)
-
-    rebuild_totals(project)
-
-    save_data(data)
-
-    return jsonify({
-        "success": True
-    })
-    
-
-# -----------------------------
-# Main
-# -----------------------------
+        "minutes": minutes
+    }
 
 if __name__ == "__main__":
-    app.run(
-        host="0.0.0.0",
-        port=int(os.environ.get("PORT", 5000)),
-        debug=False
-    )
-
-'''if __name__ == "__main__":
-
-    app.run(
-        debug=True
-    )'''
+    app.run(debug=True)

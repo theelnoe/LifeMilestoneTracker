@@ -28,13 +28,13 @@
                         id="projectSelect"
                         onchange="location='/?project='+this.value">
 
-                        {% for p in data.projects %}
+                        {% for p in projects %}
 
                         <option
                             value="{{ loop.index0 }}"
                             {% if loop.index0 == current_project %}selected{% endif %}>
 
-                            {{ p.name }}
+                            {{ p.Name }}
 
                         </option>
 
@@ -64,13 +64,13 @@
 
                     <span class="total-hours">
 
-                        {{ total_text }} / {{ project.goal }} h
+                        {{ project.total_display }} / {{ project.goal }} h
 
                     </span>
 
                     <span class="percent">
 
-                        {{ progress }} %
+                        {{ project.progress }} %
 
                     </span>
 
@@ -92,7 +92,9 @@
 
         <span id="milestoneStart">0 h</span>
 
-        <span id="milestoneEnd">50 h</span>
+        <span id="milestoneEnd">
+            {{ project.next_milestone }} h
+        </span>
 
     </div>
 
@@ -132,7 +134,7 @@
 
                     <h3>Today</h3>
 
-                    <p id="todayHours">{{ today_text }}</p>
+                    <p id="todayHours">{{ project.today_display }}</p>
 
                 </div>
 
@@ -140,14 +142,14 @@
 
                     <h3>This Week</h3>
 
-                    <p id="weekHours">{{ week_text }}</p>
+                    <p id="weekHours">{{ project.week_display }}</p>
 
                 </div>
                 <div class="stat-card">
 
                     <h3>Total</h3>
 
-                    <p id="totalHours">{{ total_text }}</p>
+                    <p id="totalHours">{{ project.total_display }}</p>
 
                 </div>
 
@@ -281,8 +283,8 @@
 
             <tbody>
 
-                {% for item in history_for_ui %}
-
+                {% for item in sessions %}
+                
                 <tr>
 
                     <td>{{ item.date }}</td>
@@ -292,7 +294,7 @@
                         {% if item.display %}
                             {{ item.display }}
                         {% else %}
-                            {{ item.hours }} h
+                            {{ item.value }} h
                         {% endif %}
 
                     </td>
@@ -301,13 +303,13 @@
 
                         <button
                             class="editSessionBtn"
-                            data-index="{{ loop.index0 }}">
+                            data-session-id="{{ item.id }}">
                             ✏️
                         </button>
 
                         <button
                             class="deleteSessionBtn"
-                            data-index="{{ loop.index0 }}">
+                            data-session-id="{{ item.id }}">
 
                             🗑
 
@@ -327,11 +329,19 @@
 
     <script id="projectData" type="application/json">
     {
+        "id": {{ project.id }},
+        "domain_id": {{ project.domain_id }},
         "name": {{ project["name"]|tojson }},
         "goal": {{ project["goal"] }},
-        "milestones": {{ project["milestones"]|tojson }},
-        "total": {{ project["total_hours"] }},
-        "history": {{ history_for_ui|tojson }}
+        "milestones": {{ project.milestones|tojson }},
+        "next_milestone": {{ project.next_milestone }},
+        "total": {{ project["total"] }},
+        "total_display": {{ project["total_display"]|tojson }},
+        "today": {{ project["today"] }},
+        "today_display": {{ project["today_display"]|tojson }},
+        "week": {{ project["week"] }},
+        "week_display": {{ project["week_display"]|tojson }},
+        "history": {{ sessions|tojson }}
     }
     </script>
 
@@ -353,7 +363,7 @@
                     min="1">
 
                 <label>Unit</label>
-                <select name="unit_id">
+                <select id="newProjectUnit" name="unit_id">
 
                     <option value="1">Hours</option>
 

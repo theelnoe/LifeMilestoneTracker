@@ -29,9 +29,7 @@ window.onload = function () {
 
     restoreTimer();
 
-    buildMilestoneBar();
-
-    updateMilestones();
+    updateMilestoneUI();
 
     // -------------------------
     // New Project
@@ -56,7 +54,7 @@ window.onload = function () {
         document.getElementById("newProjectGoal");
 
     const newProjectUnit =
-        document.querySelector("#newProjectModal select");
+        document.getElementById("newProjectUnit");
 
     // -------------------------
     // Delete Project
@@ -112,28 +110,16 @@ window.onload = function () {
 
     editButtons.forEach(btn => {
 
-        btn.onclick = function () {
+        btn.onclick = onEditSession;
 
-            editingSessionIndex = Number(btn.dataset.index);
+    });
 
-            editingRow = btn.closest("tr");
+    const deleteButtons =
+        document.querySelectorAll(".deleteSessionBtn");
 
-            const session =
-                projectData.history[editingSessionIndex];
+    deleteButtons.forEach(btn => {
 
-            const value = session.hours;
-
-            const h = Math.floor(value);
-
-            const m = Math.round((value - h) * 60);
-
-            document.getElementById("editHours").value = h;
-
-            document.getElementById("editMinutes").value = m;
-
-            editSessionModal.style.display = "flex";
-
-        };
+        btn.onclick = onDeleteSession;
 
     });
 
@@ -145,7 +131,7 @@ window.onload = function () {
         const minutes =
             parseInt(document.getElementById("editMinutes").value) || 0;
 
-        fetch("/edit_session?project=" + currentProject, {
+        fetch("/edit_session", {
 
             method: "POST",
 
@@ -157,7 +143,9 @@ window.onload = function () {
 
             body: JSON.stringify({
 
-                index: editingSessionIndex,
+                project_id: currentProject,
+
+                session_id: editingSessionId,
 
                 hours: hours,
 
@@ -171,7 +159,7 @@ window.onload = function () {
 
         .then(data => {
 
-            refreshDashboard(data);
+            // refreshDashboard(data);
 
             editingRow.querySelector(".sessionDisplay").textContent =
                 data.display;
@@ -182,7 +170,7 @@ window.onload = function () {
 
     };
 
-    // -------------------------
+    /* // -------------------------
     // Delete Session
     // -------------------------
     const deleteButtons =
@@ -195,7 +183,7 @@ window.onload = function () {
             if (!confirm("Delete this session?"))
                 return;
 
-            const index = this.dataset.index;
+            const sessionId = this.dataset.sessionId;
 
             const response = await fetch("/delete_session?project=" + currentProject, {
             
@@ -209,7 +197,7 @@ window.onload = function () {
 
                 body: JSON.stringify({
 
-                    index: index
+                    session_id: sessionId
 
                 })
 
@@ -225,7 +213,7 @@ window.onload = function () {
 
         };
 
-    });
+    }); */
 
     // =========================
     // Events
@@ -279,7 +267,7 @@ window.onload = function () {
 
         const inputUnit = document.createElement("input");
         inputUnit.type = "hidden";
-        inputUnit.name = "unit_id";
+        inputUnit.name = "domain_id";
         inputUnit.value = newProjectUnit.value;
 
         form.appendChild(inputName);
@@ -316,9 +304,9 @@ window.onload = function () {
 
         inputProject.type = "hidden";
 
-        inputProject.name = "project";
+        inputProject.name = "project_id";
 
-        inputProject.value = getCurrentProject();
+        inputProject.value = projectData.id;
 
         form.appendChild(inputProject);
 
@@ -371,8 +359,22 @@ window.onload = function () {
 
         const inputProject = document.createElement("input");
         inputProject.type = "hidden";
-        inputProject.name = "project";
-        inputProject.value = getCurrentProject();
+        inputProject.name = "project_id";
+        inputProject.value = projectData.id;
+
+        const inputIndex = document.createElement("input");
+        inputIndex.type = "hidden";
+        inputIndex.name = "project_index";
+        inputIndex.value = getCurrentProject();
+
+        const inputDomain = document.createElement("input");
+        inputDomain.type = "hidden";
+        inputDomain.name = "domain_id";
+        inputDomain.value = projectData.domain_id;
+
+        form.appendChild(inputProject);
+        form.appendChild(inputIndex);
+        form.appendChild(inputDomain);
 
         const inputName = document.createElement("input");
         inputName.type = "hidden";
@@ -401,7 +403,6 @@ window.onload = function () {
     };
 };
    
-updateMilestones();
 
 // ========================================
 // Project
@@ -413,45 +414,8 @@ function getCurrentProject() {
 
 }
 
-function updateMilestones() {
-
-    const milestones = projectData.milestones;
-    const total = projectData.total;
-
-    let next = "Completed";
-    let last = "0 h";
-
-    for (let i = 0; i < milestones.length; i++) {
-
-        if (total < milestones[i]) {
-
-            next = milestones[i] + " h";
-
-            if (i > 0)
-                last = milestones[i - 1] + " h";
-
-            break;
-
-        }
-
-    }
-
-    if (total >= milestones[milestones.length - 1]) {
-
-        last = milestones[milestones.length - 1] + " h";
-
-        next = "Completed";
-
-    }
-
-    document.getElementById("nextMilestone").textContent = next;
-
-    document.getElementById("lastMilestone").textContent = last;
-
-}
-
 function refreshDashboard(data) {
-    console.log("A");
+    
     // ---------- Update project data ----------
 
     projectData.total = data.total_hours;
@@ -480,11 +444,9 @@ function refreshDashboard(data) {
         data.total_text;
 
     // ---------- Milestones ----------
-    console.log("B");
-    updateMilestones();
-    console.log("C");
-    buildMilestoneBar();
-    console.log("D");
+    
+    updateMilestoneUI();
+    
 }
 
 // ========================================
@@ -624,6 +586,9 @@ function stopTimer() {
 
 function showAddTimeDialog() {
 
+    document.getElementById("hoursInput").value = "";
+    document.getElementById("minutesInput").value = "";
+
     document.getElementById("addTimeModal").style.display = "flex";
 
 }
@@ -660,7 +625,7 @@ function saveManualTime() {
 
     }
 
-    fetch("/add_time?project=" + currentProject, {
+    fetch("/add_time", {
 
         method: "POST",
 
@@ -672,8 +637,8 @@ function saveManualTime() {
 
         body: JSON.stringify({
 
+            project_id: currentProject,
             hours: hours,
-
             minutes: minutes
 
         })
@@ -690,10 +655,8 @@ function saveManualTime() {
 
         refreshDashboard(data);
 
-        addHistoryRow(
-            data.new_history,
-            0
-        );
+        addHistoryRow(data.new_history, 0);
+
     });
 
 }
@@ -702,7 +665,42 @@ function saveManualTime() {
 // Build Milestone Bar
 // ========================================
 
-function buildMilestoneBar() {
+function updateMilestoneUI() {
+
+    const m = getMilestoneState();
+
+    document.getElementById("progressFill").style.width =
+        m.percent + "%";
+
+    document.getElementById("lastMilestone").textContent =
+        m.previous + " h";
+
+    document.getElementById("nextMilestone").textContent =
+        m.completed ? "Completed" : m.next + " h";
+
+    document.getElementById("milestoneStart").textContent =
+        m.previous + " h";
+
+    document.getElementById("milestoneEnd").textContent =
+        m.next + " h";
+
+    document.getElementById("milestoneProgress").textContent =
+        `${formatHours(m.current)} / ${m.goal} h`;
+
+}
+
+function formatHours(hours) {
+    const totalMinutes = Math.round(hours * 60);
+
+    const h = Math.floor(totalMinutes / 60);
+    const m = totalMinutes % 60;
+
+    if (h && m) return `${h} h ${m} m`;
+    if (h) return `${h} h`;
+    return `${m} m`;
+}
+
+function getMilestoneState() {
 
     const milestones = projectData.milestones;
     const total = projectData.total;
@@ -720,28 +718,38 @@ function buildMilestoneBar() {
                 previous = milestones[i - 1];
 
             break;
-
         }
 
     }
 
-    let current = total - previous;
+    let completed = false;
 
-    let goal = next - previous;
+    if (total >= milestones[milestones.length - 1]) {
 
-    let percent = (current / goal) * 100;
+        previous = milestones[milestones.length - 1];
+        next = previous;
+        completed = true;
 
-    document.getElementById("progressFill").style.width =
-        percent + "%";
+    }
 
-    document.getElementById("milestoneStart").innerHTML =
-        previous + " h";
+    const current = total - previous;
+    const goal = next - previous;
 
-    document.getElementById("milestoneEnd").innerHTML =
-        next + " h";
+    let percent = 100;
 
-    document.getElementById("milestoneProgress").innerHTML =
-        `${current.toFixed(1)} / ${goal} h`;
+    if (!completed && goal > 0)
+        percent = current / goal * 100;
+
+    percent = Math.max(0, Math.min(100, percent));
+
+    return {
+        previous,
+        next,
+        current,
+        goal,
+        percent,
+        completed
+    };
 
 }
 
@@ -753,19 +761,19 @@ function createHistoryRow(item, index) {
 
         <td>${item.date}</td>
 
-        <td>${item.display}</td>
+        <td class="sessionDisplay">${item.display}</td>
 
         <td>
 
             <button
                 class="editSessionBtn"
-                data-index="${index}">
+                data-session-id="${item.id}">
                 ✏️
             </button>
 
             <button
                 class="deleteSessionBtn"
-                data-index="${index}">
+                data-session-id="${item.id}">
                 🗑
             </button>
 
@@ -802,10 +810,10 @@ function attachHistoryEvents(row) {
 
 function onEditSession() {
 
-    editingSessionIndex = parseInt(this.dataset.index);
-
+    editingSessionId = parseInt(this.dataset.sessionId);
+    
     const row = this.closest("tr");
-
+    editingRow = row;
     const timeText = row.cells[1].textContent.trim();
 
     let hours = 0;
@@ -835,12 +843,11 @@ async function onDeleteSession() {
     if (!confirm("Delete this session?"))
         return;
 
-    const index = this.dataset.index;
+    const sessionId = this.dataset.sessionId;
 
     const response = await fetch(
-        "/delete_session?project=" + currentProject,
+        "/delete_session",
         {
-
             method: "POST",
 
             headers: {
@@ -851,7 +858,9 @@ async function onDeleteSession() {
 
             body: JSON.stringify({
 
-                index: index
+                project_id: currentProject,
+
+                session_id: sessionId
 
             })
 

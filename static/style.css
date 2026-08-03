@@ -458,7 +458,6 @@ tbody tr:hover{
     overflow:hidden;
 
 }
-
 .progress-fill{
 
     height:100%;
@@ -470,6 +469,7 @@ tbody tr:hover{
     transition:width .5s;
 
 }
+
 
 .milestone-text{
 
