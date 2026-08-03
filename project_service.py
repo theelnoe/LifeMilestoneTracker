@@ -1,7 +1,5 @@
 from datetime import datetime
-from repository import JSONRepository, DATABASE_V2_PATH
-
-repository = JSONRepository(DATABASE_V2_PATH)
+from repository import repository
 
 DEFAULT_MILESTONES = [
     25,
